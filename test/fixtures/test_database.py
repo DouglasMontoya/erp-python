@@ -52,10 +52,11 @@ def institution_data_alt():
         "name": "Institucion.alt",
     }
 
+
 @pytest.fixture
 def user_data():
     return {
-        "id":1,
+        "id": 1,
         "firt_name": "John",
         "last_name": "Doe",
         "username": "johndoenoinoinoinonnoino89",
@@ -67,8 +68,8 @@ def user_data():
 @pytest.fixture
 def api_data():
     return {
-        "name_api":"API 1",
-        "description":"Using API 1",
-        "url_path":"https://api.example.com/",
-        "create_user":1
+        "name_api": "API 1",
+        "description": "Using API 1",
+        "url_path": "https://api.example.com/",
+        "create_user": 1,
     }

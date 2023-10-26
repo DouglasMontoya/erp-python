@@ -24,7 +24,9 @@ def create_rol(db: Session, api_id: int, data: rol_scheme.Rol) -> Rol:
 
     except IntegrityError:
         db.rollback()
-        raise HTTPException(detail="Role already exists.", status_code=status.HTTP_409_CONFLICT)
+        raise HTTPException(
+            detail="Role already exists.", status_code=status.HTTP_409_CONFLICT
+        )
 
 
 def get_rols_api(db, data: int) -> Rol:
@@ -56,7 +58,11 @@ def edit_rol(db, api_id: int, rol_id: int, data: rol_scheme.RolBase) -> Rol:
 
 def del_rol(db, api_id: int, rol_id: int) -> None:
     rol = db.query(Rol).filter(Rol.api_id == api_id, Rol.id == rol_id).first()
-    association = db.query(Association_Api_Rol).filter(Association_Api_Rol.rol_id == rol_id).first()
+    association = (
+        db.query(Association_Api_Rol)
+        .filter(Association_Api_Rol.rol_id == rol_id)
+        .first()
+    )
 
     if not rol and not association:
         raise exception_rol

@@ -9,14 +9,23 @@ import app.services.V1.crud_api as crud_api
 import app.services.V1.crud_permission as crud_permission
 import app.schemas.V1.permission_scheme as permission_scheme
 
-from app.utils.exeptions import exception_permit_denied, exception_api, exception_permission, exception_creation
+from app.utils.exeptions import (
+    exception_permit_denied,
+    exception_api,
+    exception_permission,
+    exception_creation,
+)
 
 
 permission_route = APIRouter()
 
 
 # Permission routes
-@permission_route.get("/api/{api_id}/permission", status_code=status.HTTP_200_OK, response_model=list[permission_scheme.PermissionAdmin])
+@permission_route.get(
+    "/api/{api_id}/permission",
+    status_code=status.HTTP_200_OK,
+    response_model=list[permission_scheme.PermissionAdmin],
+)
 async def get_permissions(
     api_id: int,
     db: Session = Depends(get_db),
@@ -38,7 +47,11 @@ async def get_permissions(
     return exception_permission
 
 
-@permission_route.get("/api/{api_id}/permission/{permission_id}", status_code=status.HTTP_200_OK, response_model=permission_scheme.PermissionAdmin)
+@permission_route.get(
+    "/api/{api_id}/permission/{permission_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=permission_scheme.PermissionAdmin,
+)
 async def get_permission(
     api_id: int,
     permission_id: int,
@@ -55,7 +68,9 @@ async def get_permission(
         raise exception_api
 
     if api_db.create_user == user.id or user.is_admin:
-        permission_db = crud_permission.get_permission(db=db, permission_id=permission_id, api_id=api_id)
+        permission_db = crud_permission.get_permission(
+            db=db, permission_id=permission_id, api_id=api_id
+        )
 
     if permission_db:
         return permission_db
@@ -91,7 +106,9 @@ async def create_permission(
     raise exception_creation
 
 
-@permission_route.put("/api/{api_id}/permission/{permission_id}", status_code=status.HTTP_200_OK)
+@permission_route.put(
+    "/api/{api_id}/permission/{permission_id}", status_code=status.HTTP_200_OK
+)
 async def edit_permission(
     api_id: int,
     permission_id: int,
@@ -111,19 +128,25 @@ async def edit_permission(
     if not api_db:
         raise exception_api
 
-    permission_db = crud_permission.get_permission(db=db, permission_id=permission_id, api_id=api_id)
+    permission_db = crud_permission.get_permission(
+        db=db, permission_id=permission_id, api_id=api_id
+    )
     if not permission_db:
         raise exception_permission
 
     # Validates whether the API exists or not.
     crud_permission.valid_permission(db, api_id, data)
     if api_db.create_user == user.id or user.is_admin:
-        return crud_permission.edit_permission(db=db, api_id=api_id, permission_id=permission_id, data=data)
+        return crud_permission.edit_permission(
+            db=db, api_id=api_id, permission_id=permission_id, data=data
+        )
 
     raise exception_creation
 
 
-@permission_route.delete("/api/{api_id}/permission/{permission_id}", status_code=status.HTTP_204_NO_CONTENT)
+@permission_route.delete(
+    "/api/{api_id}/permission/{permission_id}", status_code=status.HTTP_204_NO_CONTENT
+)
 async def remove_permission(
     api_id: int,
     permission_id: int,
@@ -141,11 +164,15 @@ async def remove_permission(
     if not api_db:
         raise exception_api
 
-    permission_db = crud_permission.get_permission(db=db, permission_id=permission_id, api_id=api_id)
+    permission_db = crud_permission.get_permission(
+        db=db, permission_id=permission_id, api_id=api_id
+    )
     if not permission_db:
         raise exception_permission
 
     if api_db.create_user == user.id or user.is_admin:
-        crud_permission.del_permission(db=db, api_id=api_id, permission_id=permission_id)
+        crud_permission.del_permission(
+            db=db, api_id=api_id, permission_id=permission_id
+        )
     else:
         raise exception_creation

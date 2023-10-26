@@ -83,7 +83,9 @@ def test_verify_password():
 def test_create_token():
     data = {"user_id": 1, "username": "example"}
     token = security.create_token(data)
-    decoded_token = security.jwt.decode(token, security.settings.SECRET_KEY, security.settings.ALGORITHM)
+    decoded_token = security.jwt.decode(
+        token, security.settings.SECRET_KEY, security.settings.ALGORITHM
+    )
 
     assert decoded_token["user_id"] == 1
     assert decoded_token["username"] == "example"
@@ -100,7 +102,9 @@ def test_create_token():
     time_expire = 30
 
     token = security.create_token(data, time_expire)
-    decoded_token = security.jwt.decode(token, security.settings.SECRET_KEY, security.settings.ALGORITHM)
+    decoded_token = security.jwt.decode(
+        token, security.settings.SECRET_KEY, security.settings.ALGORITHM
+    )
 
     assert decoded_token["exp"] is not None
 
@@ -165,7 +169,9 @@ def test_Verify_token_valid(mock_get_user, mock_get_db, mock_decode_token):
 
     mock_decode_token.assert_called_once_with(token_data)
     mock_get_db.assert_called_once()
-    mock_get_user.assert_called_once_with(db=mock_get_db().__next__(), user_id_or_name=123)  # Change the value here
+    mock_get_user.assert_called_once_with(
+        db=mock_get_db().__next__(), user_id_or_name=123
+    )  # Change the value here
 
 
 @patch("app.core.V1.security.verify_token_redis")

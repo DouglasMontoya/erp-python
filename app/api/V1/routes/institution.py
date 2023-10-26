@@ -8,7 +8,11 @@ from app.models.V1.user_api_model import User
 import app.services.V1.crud_institution as crud_institution
 import app.schemas.V1.user_scheme as user_scheme
 
-from app.utils.exeptions import exception_permit_denied, exception_creation, exception_institution
+from app.utils.exeptions import (
+    exception_permit_denied,
+    exception_creation,
+    exception_institution,
+)
 
 
 institution_route = APIRouter(prefix="/institution")
@@ -69,14 +73,18 @@ async def edit_institution(
     if user.is_guest:
         raise exception_permit_denied
 
-    institution_db = crud_institution.get_institution(db=db, institution_id=institution_id)
+    institution_db = crud_institution.get_institution(
+        db=db, institution_id=institution_id
+    )
     if not institution_db:
         raise exception_institution
 
     # Validates whether the API exists or not.
     crud_institution.valid_institution(db, data)
     if user.is_admin:
-        return crud_institution.edit_institution(db=db, institution_id=institution_id, data=data)
+        return crud_institution.edit_institution(
+            db=db, institution_id=institution_id, data=data
+        )
 
     raise exception_creation
 
@@ -93,7 +101,9 @@ async def remove_institution(
     if user.is_guest:
         raise exception_permit_denied
 
-    institution_db = crud_institution.get_institution(db=db, institution_id=institution_id)
+    institution_db = crud_institution.get_institution(
+        db=db, institution_id=institution_id
+    )
     if not institution_db:
         raise exception_institution
 

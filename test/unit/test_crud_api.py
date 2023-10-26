@@ -30,9 +30,19 @@ def test_create_api(db, api_data):
 
 
 def test_get_apis(db):
-    api1 = user_api_model.Api(name_api="API 1", create_user=1, description="Using API 1", url_path="https://api.example1.com/")
+    api1 = user_api_model.Api(
+        name_api="API 1",
+        create_user=1,
+        description="Using API 1",
+        url_path="https://api.example1.com/",
+    )
 
-    api2 = user_api_model.Api(name_api="API 2", create_user=1, description="Using API 2", url_path="https://api.example2.com/")
+    api2 = user_api_model.Api(
+        name_api="API 2",
+        create_user=1,
+        description="Using API 2",
+        url_path="https://api.example2.com/",
+    )
 
     db.add_all([api1, api2])
     db.commit()
@@ -51,14 +61,26 @@ def test_get_apis(db):
 
 
 def test_valid_api(db):
-    api1 = crud_api.Api(name_api="API 1", create_user=1, description="Using API 1", url_path="https://api.example1.com/")
-    api2 = crud_api.Api(name_api="API 2", create_user=1, description="Using API 2", url_path="https://api.example2.com/")
+    api1 = crud_api.Api(
+        name_api="API 1",
+        create_user=1,
+        description="Using API 1",
+        url_path="https://api.example1.com/",
+    )
+    api2 = crud_api.Api(
+        name_api="API 2",
+        create_user=1,
+        description="Using API 2",
+        url_path="https://api.example2.com/",
+    )
 
     db.add_all([api1, api2])
     db.commit()
     db.refresh(api2)
 
-    data_duplicate_name = api_scheme.APIDB(name_api="API 1", description="Using API 2", url_path="https://api.example.com/")
+    data_duplicate_name = api_scheme.APIDB(
+        name_api="API 1", description="Using API 2", url_path="https://api.example.com/"
+    )
     try:
         crud_api.valid_api(db, dict(data_duplicate_name))
         assert False
@@ -66,14 +88,18 @@ def test_valid_api(db):
         assert e.status_code == status.HTTP_400_BAD_REQUEST
         assert e.detail == "The api name is already in use."
 
-    data_duplicate_url = api_scheme.APIDB(name_api="API 2", description="Using API 2", url_path="https://api.example.com/")
+    data_duplicate_url = api_scheme.APIDB(
+        name_api="API 2", description="Using API 2", url_path="https://api.example.com/"
+    )
     try:
         crud_api.valid_api(db, dict(data_duplicate_url))
         assert False  # La excepción no fue lanzada
     except HTTPException as e:
         assert e.status_code == status.HTTP_400_BAD_REQUEST
 
-    data_valid = api_scheme.APIDB(name_api="API 3", description="Using API 3", url_path="https://api.example.com")
+    data_valid = api_scheme.APIDB(
+        name_api="API 3", description="Using API 3", url_path="https://api.example.com"
+    )
     try:
         crud_api.valid_api(db, dict(data_valid))
     except HTTPException as e:
@@ -81,7 +107,12 @@ def test_valid_api(db):
 
 
 def test_deactivate_api(db):
-    api = crud_api.Api(name_api="API 1", create_user=1, description="Using API 1", url_path="https://api.example1.com/")
+    api = crud_api.Api(
+        name_api="API 1",
+        create_user=1,
+        description="Using API 1",
+        url_path="https://api.example1.com/",
+    )
 
     db.add(api)
     db.commit()

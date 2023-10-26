@@ -8,7 +8,12 @@ from fastapi.security import OAuth2PasswordRequestForm
 from app.models.V1.user_api_model import User, Log_login
 from app.config.redis import get_jwt_connection
 from app.services.V1.crud_users import create_user, get_user
-from app.core.V1.security import create_token, verify_password, encrypt_password, verify_token_internal
+from app.core.V1.security import (
+    create_token,
+    verify_password,
+    encrypt_password,
+    verify_token_internal,
+)
 from app.core.V1.sessions import get_db
 
 import app.schemas.V1.user_scheme as user_scheme
@@ -64,7 +69,9 @@ async def login_user(
         # Si el usuario ha alcanzado un límite de intentos fallidos, bloquear la cuenta
         if user.failed_login_attempts >= settings.MAX_FAILED_LOGIN_ATTEMPTS:
             user.is_locked = True
-            user.unlock_date = datetime.utcnow() + timedelta(minutes=settings.LOCK_DURATION_MINUTES)
+            user.unlock_date = datetime.utcnow() + timedelta(
+                minutes=settings.LOCK_DURATION_MINUTES
+            )
 
         db.commit()
         raise HTTPException(
@@ -205,7 +212,9 @@ async def reniew(
     return {"access_token": token, "token_type": "bearer"}
 
 
-@auth_route.get("/logs", status_code=status.HTTP_202_ACCEPTED, response_model=list[Log_login_schema])
+@auth_route.get(
+    "/logs", status_code=status.HTTP_202_ACCEPTED, response_model=list[Log_login_schema]
+)
 async def log_login(
     db: Session = Depends(get_db),
     verify: tuple[User, str] = Depends(verify_token_internal),

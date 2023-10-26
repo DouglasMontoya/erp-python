@@ -14,7 +14,9 @@ from app.utils.exeptions import exception_user
 user_route = APIRouter(prefix="/user")
 
 
-@user_route.get("/", status_code=status.HTTP_200_OK, response_model=list[user_scheme.UserAdmin])
+@user_route.get(
+    "/", status_code=status.HTTP_200_OK, response_model=list[user_scheme.UserAdmin]
+)
 async def get_users(
     db: Session = Depends(get_db),
     verify: tuple[User, str] = Depends(verify_token_internal),
@@ -29,14 +31,22 @@ async def get_users(
         for user_db in users_db:
             user_data = user_db.__dict__
             print("➡ user_data :", user_data)
-            user_data["institution"] = user_db.institutions[0].institution.name if len(user_db.institutions) > 0 else "other"
+            user_data["institution"] = (
+                user_db.institutions[0].institution.name
+                if len(user_db.institutions) > 0
+                else "other"
+            )
             output_users.append(user_scheme.UserAdmin(**user_data))
         return output_users
 
     return []
 
 
-@user_route.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=Union[user_scheme.UserAdmin, user_scheme.User])
+@user_route.get(
+    "/{user_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=Union[user_scheme.UserAdmin, user_scheme.User],
+)
 async def get_user(
     user_id: int,
     db: Session = Depends(get_db),
@@ -49,7 +59,11 @@ async def get_user(
         if user.is_admin:
             user_db = crud_user.get_users(db, int(user_id))
             user_data = user_db.__dict__
-            user_data["institution"] = user_db.institutions[0].institution.name if len(user_db.institutions) > 0 else "other"
+            user_data["institution"] = (
+                user_db.institutions[0].institution.name
+                if len(user_db.institutions) > 0
+                else "other"
+            )
             print(user_db.institutions[0].institution.name)
             return user_scheme.UserAdmin(**user_db.__dict__)
     except:
@@ -58,7 +72,9 @@ async def get_user(
     return user_scheme.User(**user.__dict__)
 
 
-@user_route.put("/{user_id}", status_code=status.HTTP_200_OK, response_model=user_scheme.User)
+@user_route.put(
+    "/{user_id}", status_code=status.HTTP_200_OK, response_model=user_scheme.User
+)
 async def edit_user(
     user_id: int,
     data: user_scheme.UserEdit,

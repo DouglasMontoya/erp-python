@@ -45,7 +45,9 @@ def create_token(data: TokenPayload, time_expire: Optional[int] = 20) -> str:
 def decode_token(token: str) -> Optional[dict]:
     try:
         # Decodificamos el token JWT y verificamos su firma
-        decode_token: TokenDecode = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        decode_token: TokenDecode = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+        )
         return decode_token
 
     except JWTError as e:

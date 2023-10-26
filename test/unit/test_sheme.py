@@ -46,7 +46,9 @@ def test_token_payload():
 
 
 def test_token_decode():
-    decode = jwt_scheme.TokenDecode(sub="user123", iss="myapp", typ="external", iat=1234567890, exp=1234567890)
+    decode = jwt_scheme.TokenDecode(
+        sub="user123", iss="myapp", typ="external", iat=1234567890, exp=1234567890
+    )
 
     assert decode.sub == "user123"
     assert decode.iss == "myapp"
@@ -56,7 +58,12 @@ def test_token_decode():
 
 
 def test_user_base():
-    user = user_scheme.UserBase(firt_name="John", last_name="Doe", username="johndoe", email="johndoe@example.com")
+    user = user_scheme.UserBase(
+        firt_name="John",
+        last_name="Doe",
+        username="johndoe",
+        email="johndoe@example.com",
+    )
 
     assert user.firt_name == "John"
     assert user.last_name == "Doe"
@@ -71,7 +78,9 @@ def test_institution():
 
 
 def test_user_edit():
-    user_edit = user_scheme.UserEdit(firt_name="John", last_name="Doe", institution="My Institution")
+    user_edit = user_scheme.UserEdit(
+        firt_name="John", last_name="Doe", institution="My Institution"
+    )
 
     assert user_edit.firt_name == "John"
     assert user_edit.last_name == "Doe"
@@ -79,7 +88,13 @@ def test_user_edit():
 
 
 def test_user_db():
-    user_db = user_scheme.UserDB(firt_name="John", last_name="Doe", username="johndoe", email="johndoe@example.com", password="password123")
+    user_db = user_scheme.UserDB(
+        firt_name="John",
+        last_name="Doe",
+        username="johndoe",
+        email="johndoe@example.com",
+        password="password123",
+    )
 
     assert user_db.firt_name == "John"
     assert user_db.last_name == "Doe"
@@ -133,7 +148,11 @@ def test_user_admin():
 
 
 def test_change_password():
-    change_password = user_scheme.ChangePassword(current_password="password123", new_password="newpassword123", confirm_password="newpassword123")
+    change_password = user_scheme.ChangePassword(
+        current_password="password123",
+        new_password="newpassword123",
+        confirm_password="newpassword123",
+    )
 
     assert change_password.current_password == "password123"
     assert change_password.new_password == "newpassword123"
@@ -141,7 +160,9 @@ def test_change_password():
 
 
 def test_APIBase():
-    api = api_scheme.APIBase(name_api="API Test", description="Testing", url_path="https://example.com/")
+    api = api_scheme.APIBase(
+        name_api="API Test", description="Testing", url_path="https://example.com/"
+    )
 
     assert isinstance(api.name_api, str)
     assert isinstance(api.description, str)
@@ -152,7 +173,13 @@ def test_APIBase():
 
 
 def test_APIEdit():
-    api = api_scheme.APIEdit(name_api="API 1", description="Using API 1", url_path="https://api.example.com", rol=["admin"], permission=["crud"])
+    api = api_scheme.APIEdit(
+        name_api="API 1",
+        description="Using API 1",
+        url_path="https://api.example.com",
+        rol=["admin"],
+        permission=["crud"],
+    )
 
     assert api.name_api == "API 1"
     assert api.description == "Using API 1"
@@ -162,7 +189,12 @@ def test_APIEdit():
 
 
 def test_APIDB():
-    api = api_scheme.APIDB(name_api="API 1", description="Using API 1", url_path="https://api.example.com/", create_user=1)
+    api = api_scheme.APIDB(
+        name_api="API 1",
+        description="Using API 1",
+        url_path="https://api.example.com/",
+        create_user=1,
+    )
 
     assert api.name_api == "API 1"
     assert api.description == "Using API 1"
@@ -171,7 +203,12 @@ def test_APIDB():
 
 
 def test_API():
-    api = api_scheme.API(id=1, name_api="API 1", description="Using API 1", url_path="https://api.example.com/")
+    api = api_scheme.API(
+        id=1,
+        name_api="API 1",
+        description="Using API 1",
+        url_path="https://api.example.com/",
+    )
     assert api.id == 1
     assert api.name_api == "API 1"
     assert api.description == "Using API 1"
@@ -189,7 +226,6 @@ def test_APIAdmin():
         permission=["string"],
         id=0,
         is_active=True,
- 
     )
     assert api.name_api == "API 1"
     assert api.description == "Using API 1"

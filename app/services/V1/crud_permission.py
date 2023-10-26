@@ -10,7 +10,9 @@ import app.schemas.V1.permission_scheme as permission_scheme
 from app.utils.exeptions import exception_permission
 
 
-def create_permission(db: Session, api_id: int, data: permission_scheme.PermissionDB) -> Permission:
+def create_permission(
+    db: Session, api_id: int, data: permission_scheme.PermissionDB
+) -> Permission:
     try:
         db_permission = Permission(
             api_id=api_id,
@@ -23,12 +25,20 @@ def create_permission(db: Session, api_id: int, data: permission_scheme.Permissi
         db.refresh(db_permission)
     except IntegrityError:
         db.rollback()
-        raise HTTPException(detail="Permission already exists.", status_code=status.HTTP_409_CONFLICT)
+        raise HTTPException(
+            detail="Permission already exists.", status_code=status.HTTP_409_CONFLICT
+        )
 
 
-def get_permission(db: Session, permission_id: Union[int, None] = None, api_id: Union[int, None] = None):
+def get_permission(
+    db: Session, permission_id: Union[int, None] = None, api_id: Union[int, None] = None
+):
     if isinstance(api_id, int) and isinstance(permission_id, int):
-        query = db.query(Permission).filter(Permission.api_id == api_id, Permission.id == permission_id).first()
+        query = (
+            db.query(Permission)
+            .filter(Permission.api_id == api_id, Permission.id == permission_id)
+            .first()
+        )
         return query
 
     if isinstance(api_id, int):
@@ -37,8 +47,14 @@ def get_permission(db: Session, permission_id: Union[int, None] = None, api_id: 
     return db.query(Permission).all()
 
 
-def edit_permission(db: Session, data: permission_scheme.PermissionEdit, api_id: int, permission_id: int):
-    db_permission = db.query(Permission).filter(Permission.api_id == api_id, Permission.id == permission_id).first()
+def edit_permission(
+    db: Session, data: permission_scheme.PermissionEdit, api_id: int, permission_id: int
+):
+    db_permission = (
+        db.query(Permission)
+        .filter(Permission.api_id == api_id, Permission.id == permission_id)
+        .first()
+    )
     if not db_permission:
         raise exception_permission
 
@@ -50,14 +66,28 @@ def edit_permission(db: Session, data: permission_scheme.PermissionEdit, api_id:
     return db_permission
 
 
-def valid_permission(db: Session, api_id: int, data: permission_scheme.PermissionDB) -> Optional[Permission]:
-    permission_db = db.query(Permission).filter_by(api_id=api_id).filter_by(name=data["name"]).first()
+def valid_permission(
+    db: Session, api_id: int, data: permission_scheme.PermissionDB
+) -> Optional[Permission]:
+    permission_db = (
+        db.query(Permission)
+        .filter_by(api_id=api_id)
+        .filter_by(name=data["name"])
+        .first()
+    )
     if permission_db:
-        raise HTTPException(detail="The API already has a permission with that name.", status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(
+            detail="The API already has a permission with that name.",
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 def del_permission(db, api_id: int, permission_id: int) -> None:
-    permission_db = db.query(Permission).filter(Permission.api_id == api_id, Permission.id == permission_id).first()
+    permission_db = (
+        db.query(Permission)
+        .filter(Permission.api_id == api_id, Permission.id == permission_id)
+        .first()
+    )
 
     if not permission_db:
         raise exception_permission

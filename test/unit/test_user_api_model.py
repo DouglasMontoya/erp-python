@@ -68,7 +68,9 @@ def test_log_login_model():
 
 
 def test_rol_model():
-    rol = user_api_model.Rol(id=1, api_id=1, name="Example Rol", description="This is an example role")
+    rol = user_api_model.Rol(
+        id=1, api_id=1, name="Example Rol", description="This is an example role"
+    )
 
     assert isinstance(rol.id, int)
     assert isinstance(rol.api_id, int)
@@ -83,7 +85,9 @@ def test_rol_model():
 
 
 def test_permission_model():
-    permission = user_api_model.Permission(id=1, api_id=1, name="Example", description="Example permission")
+    permission = user_api_model.Permission(
+        id=1, api_id=1, name="Example", description="Example permission"
+    )
 
     assert isinstance(permission.id, int)
     assert isinstance(permission.api_id, int)

@@ -1,7 +1,11 @@
 from typing import Union, Optional
 from sqlalchemy.orm import Session
 
-from app.models.V1.user_api_model import Institution, User, Assosiation_institutions_user
+from app.models.V1.user_api_model import (
+    Institution,
+    User,
+    Assosiation_institutions_user,
+)
 import app.schemas.V1.user_scheme as user_scheme
 import app.services.V1.crud_institution as crud_institution
 
@@ -28,7 +32,13 @@ def get_user(db: Session, user_id_or_name: Union[int, str]) -> Optional[User]:
     if isinstance(user_id_or_name, int):
         return db.query(User).filter(User.id == user_id_or_name).first()
     else:
-        return db.query(User).filter((User.username == user_id_or_name) | (User.email == user_id_or_name)).first()
+        return (
+            db.query(User)
+            .filter(
+                (User.username == user_id_or_name) | (User.email == user_id_or_name)
+            )
+            .first()
+        )
 
 
 def get_users(db: Session, user_id: Union[int, None] = None):

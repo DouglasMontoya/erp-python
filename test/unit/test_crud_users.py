@@ -74,7 +74,11 @@ def test_edit_user(db, user_data, institution_data_alt):
     db.commit()
     db.refresh(user)
 
-    data = {"firt_name": "Carll", "last_name": "Usuamk", "institution": "Institucion.alt"}
+    data = {
+        "firt_name": "Carll",
+        "last_name": "Usuamk",
+        "institution": "Institucion.alt",
+    }
 
     institution = user_api_model.Institution(**institution_data_alt)
 
@@ -92,7 +96,11 @@ def test_edit_user(db, user_data, institution_data_alt):
 
     assert user_update.firt_name == data["firt_name"]
     assert user_update.last_name == data["last_name"]
-    assert any(institution.institution.name == "Institucion.alt" for institution in user_update.institutions)
+    assert any(
+        institution.institution.name == "Institucion.alt"
+        for institution in user_update.institutions
+    )
+
 
 def test_deactivate_user(db, user_data):
     user = user_api_model.User(**user_data)
@@ -105,5 +113,7 @@ def test_deactivate_user(db, user_data):
 
     crud_users.deactivate_users(db, user.id)
 
-    updated_user = db.query(user_api_model.User).filter(user_api_model.User.id == user.id).first()
+    updated_user = (
+        db.query(user_api_model.User).filter(user_api_model.User.id == user.id).first()
+    )
     assert updated_user.is_banned is True

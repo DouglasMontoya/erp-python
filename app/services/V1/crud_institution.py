@@ -36,10 +36,15 @@ def edit_institution(db: Session, data: user_scheme.Institution, institution_id:
     return db_institution
 
 
-def valid_institution(db: Session, data: user_scheme.Institution) -> Optional[Institution]:
+def valid_institution(
+    db: Session, data: user_scheme.Institution
+) -> Optional[Institution]:
     institution_db = db.query(Institution).filter_by(name=data["name"]).first()
     if institution_db:
-        raise HTTPException(detail="There is already an institution with that name.", status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(
+            detail="There is already an institution with that name.",
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 def del_institution(db, institution_id: int) -> None:

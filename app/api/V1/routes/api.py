@@ -9,13 +9,19 @@ import app.services.V1.crud_api as crud_api
 import app.schemas.V1.api_scheme as api_scheme
 
 
-from app.utils.exeptions import exception_permit_denied, exception_api, exception_creation
+from app.utils.exeptions import (
+    exception_permit_denied,
+    exception_api,
+    exception_creation,
+)
 
 
 api_route = APIRouter()
 
 
-@api_route.get("/api", status_code=status.HTTP_200_OK, response_model=list[api_scheme.APIAdmin])
+@api_route.get(
+    "/api", status_code=status.HTTP_200_OK, response_model=list[api_scheme.APIAdmin]
+)
 async def get_apis(
     db: Session = Depends(get_db),
     verify: tuple[User, str] = Depends(verify_token_internal),
@@ -59,7 +65,9 @@ async def create_api(
         raise exception_creation
 
 
-@api_route.get("/api/{api_id}", status_code=status.HTTP_200_OK, response_model=api_scheme.APIBase)
+@api_route.get(
+    "/api/{api_id}", status_code=status.HTTP_200_OK, response_model=api_scheme.APIBase
+)
 async def get_api(
     api_id: int,
     db: Session = Depends(get_db),
@@ -87,7 +95,9 @@ async def get_api(
         raise exception_api
 
 
-@api_route.put("/api/{api_id}", status_code=status.HTTP_200_OK, response_model=api_scheme.APIEdit)
+@api_route.put(
+    "/api/{api_id}", status_code=status.HTTP_200_OK, response_model=api_scheme.APIEdit
+)
 async def edit_api(
     api_id: int,
     data: api_scheme.APIEdit,

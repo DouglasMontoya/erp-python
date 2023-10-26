@@ -9,7 +9,11 @@ import app.schemas.V1.rol_api_scheme as rol_scheme
 import app.services.V1.crud_api as crud_api
 import app.services.V1.crud_roles as crud_roles
 
-from app.utils.exeptions import exception_permit_denied, exception_rol, exception_creation
+from app.utils.exeptions import (
+    exception_permit_denied,
+    exception_rol,
+    exception_creation,
+)
 
 
 rol_route = APIRouter()
@@ -39,11 +43,15 @@ async def create_rol(
     if user.is_admin or user.id == db_api.create_user:
         crud_roles.create_rol(db, db_api.id, data)
         return
-    
+
     raise exception_permit_denied
 
 
-@rol_route.get("/api/{api_id}/rol", status_code=status.HTTP_200_OK, response_model=list[rol_scheme.Rol])
+@rol_route.get(
+    "/api/{api_id}/rol",
+    status_code=status.HTTP_200_OK,
+    response_model=list[rol_scheme.Rol],
+)
 async def get_rols(
     api_id: int,
     db: Session = Depends(get_db),
@@ -62,7 +70,11 @@ async def get_rols(
     return rols
 
 
-@rol_route.get("/api/{api_id}/rol/{rol_id}", status_code=status.HTTP_200_OK, response_model=rol_scheme.Rol)
+@rol_route.get(
+    "/api/{api_id}/rol/{rol_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=rol_scheme.Rol,
+)
 async def get_rol(
     api_id: int,
     rol_id: int,

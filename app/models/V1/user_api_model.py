@@ -40,9 +40,13 @@ class User(Timestamp, Base):
     log: Mapped[List["Log_login"]] = relationship()
     api: Mapped[List["Api"]] = relationship()
 
-    institutions: Mapped[List["Assosiation_institutions_user"]] = relationship(back_populates="user")
+    institutions: Mapped[List["Assosiation_institutions_user"]] = relationship(
+        back_populates="user"
+    )
 
-    user_apis: Mapped[List["Association_User_Api_Rol"]] = relationship(back_populates="user_api")
+    user_apis: Mapped[List["Association_User_Api_Rol"]] = relationship(
+        back_populates="user_api"
+    )
 
     @property
     def is_admin(self):
@@ -64,14 +68,18 @@ class Institution(Timestamp, Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50), unique=True)
 
-    users: Mapped[List["Assosiation_institutions_user"]] = relationship(back_populates="institution")
+    users: Mapped[List["Assosiation_institutions_user"]] = relationship(
+        back_populates="institution"
+    )
 
 
 class Assosiation_institutions_user(Timestamp, Base):
     __tablename__ = "association_institutions_user_table"
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
-    institution_id: Mapped[int] = mapped_column(ForeignKey("institution.id"), primary_key=True)
+    institution_id: Mapped[int] = mapped_column(
+        ForeignKey("institution.id"), primary_key=True
+    )
 
     user: Mapped[List["User"]] = relationship(back_populates="institutions")
     institution: Mapped[List["Institution"]] = relationship(back_populates="users")
@@ -115,7 +123,9 @@ class Rol(Timestamp, Base):
     description: Mapped[str]
 
     apis: Mapped[List["Association_Api_Rol"]] = relationship(back_populates="api")
-    permissions: Mapped[List["Association_Rol_Permission"]] = relationship(back_populates="rol")
+    permissions: Mapped[List["Association_Rol_Permission"]] = relationship(
+        back_populates="rol"
+    )
 
 
 class Permission(Timestamp, Base):
@@ -128,7 +138,9 @@ class Permission(Timestamp, Base):
     name: Mapped[str]
     description: Mapped[str]
 
-    rols: Mapped[List["Association_Rol_Permission"]] = relationship(back_populates="permission")
+    rols: Mapped[List["Association_Rol_Permission"]] = relationship(
+        back_populates="permission"
+    )
 
 
 class Association_Rol_Permission(Timestamp, Base):
@@ -138,7 +150,9 @@ class Association_Rol_Permission(Timestamp, Base):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     rol_id: Mapped[int] = mapped_column(ForeignKey("rol.id", ondelete="CASCADE"))
-    permission_id: Mapped[int] = mapped_column(ForeignKey("permission.id", ondelete="CASCADE"))
+    permission_id: Mapped[int] = mapped_column(
+        ForeignKey("permission.id", ondelete="CASCADE")
+    )
 
     rol: Mapped[List["Rol"]] = relationship(back_populates="permissions")
     permission: Mapped[List["Permission"]] = relationship(back_populates="rols")
@@ -156,7 +170,9 @@ class Association_Api_Rol(Timestamp, Base):
     api: Mapped[List["Rol"]] = relationship(back_populates="apis")
     rol: Mapped[List["Api"]] = relationship(back_populates="rols")
 
-    api_rols: Mapped[List["Association_User_Api_Rol"]] = relationship(back_populates="api_rol")
+    api_rols: Mapped[List["Association_User_Api_Rol"]] = relationship(
+        back_populates="api_rol"
+    )
 
 
 class Association_User_Api_Rol(Timestamp, Base):
@@ -164,10 +180,14 @@ class Association_User_Api_Rol(Timestamp, Base):
     __table_args__ = {"extend_existing": True}
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
-    api_rol_id: Mapped[int] = mapped_column(ForeignKey("association_api_rol_table.id"), primary_key=True)
+    api_rol_id: Mapped[int] = mapped_column(
+        ForeignKey("association_api_rol_table.id"), primary_key=True
+    )
 
     user_api: Mapped[List["User"]] = relationship(back_populates="user_apis")
-    api_rol: Mapped[List["Association_Api_Rol"]] = relationship(back_populates="api_rols")
+    api_rol: Mapped[List["Association_Api_Rol"]] = relationship(
+        back_populates="api_rols"
+    )
 
 
 Base.metadata.create_all(bind=engine)
