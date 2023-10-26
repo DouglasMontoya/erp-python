@@ -1,0 +1,48 @@
+stages:
+  - lint
+  - test
+  - build
+
+flake8:
+  stage: lint
+  image: python:3.10-alpine
+  script:
+    - pip install flake8
+    - flake8 .
+
+formatting:
+  stage: lint
+  image: python:3.10-alpine
+  script:
+    - pip install black
+    - black --check .
+
+pytest:
+  stage: test
+  image: python:3.10-alpine
+  script:
+    - pip install -r requirements.txt
+    - pytest
+
+build:
+  stage: build
+  services:
+    - docker:20.10.16-dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/erpsistemas/erp-python/erp-python:latest .
+    - docker push $CI_REGISTRY/erpsistemas/erp-python/erp-python:latest
+  only:
+    - dev
+
+deploy:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+  script:
+    - kubectl config use-context erpsistemas/erp-python:erpbackend-agent
+    - kubectl apply -f erp-deploy-backend.yaml
+    - kubectl delete pods --selector=app=erpsystem-python-app
+  only:
+    - dev

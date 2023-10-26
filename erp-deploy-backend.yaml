@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: erpsystem-python-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: erpsystem-python-app
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8081
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: erpsystem-python-app-deploy
+  labels:
+    app: erpsystem-python-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erpsystem-python-app
+  template:
+    metadata:
+      labels:
+        app: erpsystem-python-app
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: erpbackend
+          image: registry.gitlab.com/erpsistemas/erp-python/erp-python:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DBHOST
+              value: "66.94.115.71"
+            - name: DBNAME
+              value: "db1"
+            - name: DBPARAM
+              value: "sslmode=disable"
+            - name: DBPASS
+              value: "b29a151c-035b-4f02-ad45-e60099cf9469"
+            - name: DBPORT
+              value: "5432"
+            - name: DBUSER
+              value: "erp-user-db"
+            - name: JWT_CORE
+              value: "d2205681-b989-4adb-afba-e3a5ffa9993f"
+            - name: JWT_TENANT
+              value: "60a0f59d-b0f1-4096-be51-7e970cace430"
+      imagePullSecrets:
+        - name: registry-credentials

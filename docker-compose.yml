@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:alpine
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: ${USERNAME_DB}
+      POSTGRES_PASSWORD: ${PASSWORD}
+      POSTGRES_DB: ${DATABASE}
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass ${PASSWORD_REDIS}
+    environment:
+      REDIS_PASSWORD: ${PASSWORD_REDIS}
+    env_file:
+      - .env
+volumes:
+  postgres_data:
