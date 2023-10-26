@@ -51,7 +51,7 @@ def edit_users(db: Session, data: user_scheme.UserBase, user_id: int):
     db.add(user)
     db.commit()
 
-    institution = db.query(Institution).filter_by(id=data["institution"]).first()
+    institution = db.query(Institution).filter_by(name=data["institution"]).first()
     if not institution:
         raise exception_institution
 

@@ -11,7 +11,7 @@ from fixtures import db, api_data
 def test_crud_api_code_existence():
     """Ensure that variables and functions exist and are accessible"""
 
-    assert hasattr(crud_api, "exception")
+    assert hasattr(crud_api, "exception_api")
     assert callable(crud_api.valid_api)
     assert callable(crud_api.get_apis)
     assert callable(crud_api.create_api)

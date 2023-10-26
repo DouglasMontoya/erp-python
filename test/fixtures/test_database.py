@@ -47,6 +47,12 @@ def institution_data():
 
 
 @pytest.fixture
+def institution_data_alt():
+    return {
+        "name": "Institucion.alt",
+    }
+
+@pytest.fixture
 def user_data():
     return {
         "id":1,

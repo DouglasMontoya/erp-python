@@ -4,12 +4,12 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app import sessions, user_api_model, crud_users
-from fixtures import db, institution_data, user_data
+from fixtures import db, institution_data, user_data, institution_data_alt
 
 
 def test_crud_users_code_existence():
     """Ensure that variables and functions exist and are accessible"""
-    
+
     assert callable(crud_users.create_user)
     assert callable(crud_users.get_user)
     assert callable(crud_users.get_users)
@@ -65,7 +65,7 @@ def test_get_users(db, user_data):
     assert user in result_all
 
 
-def test_edit_user(db, user_data):
+def test_edit_user(db, user_data, institution_data_alt):
     user = user_api_model.User(**user_data)
 
     assert user is not None
@@ -74,7 +74,15 @@ def test_edit_user(db, user_data):
     db.commit()
     db.refresh(user)
 
-    data = {"firt_name": "Carll", "last_name": "Usuamk", "institution": "alt"}
+    data = {"firt_name": "Carll", "last_name": "Usuamk", "institution": "Institucion.alt"}
+
+    institution = user_api_model.Institution(**institution_data_alt)
+
+    assert institution is not None
+
+    db.add(institution)
+    db.commit()
+    db.refresh(institution)
 
     user_update = crud_users.edit_users(db, data, user_data["id"])
 
@@ -84,8 +92,7 @@ def test_edit_user(db, user_data):
 
     assert user_update.firt_name == data["firt_name"]
     assert user_update.last_name == data["last_name"]
-    assert user_update.institution == data["institution"]
-
+    assert any(institution.institution.name == "Institucion.alt" for institution in user_update.institutions)
 
 def test_deactivate_user(db, user_data):
     user = user_api_model.User(**user_data)
