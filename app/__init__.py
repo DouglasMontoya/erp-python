@@ -21,3 +21,27 @@ from .config import redis, sql
 from .services.V1 import crud_institution, crud_institution, crud_api
 
 from .models.V1 import mixins, user_api_model
+
+__all__ = [
+    "security",
+    "sessions",
+    "crud_users",
+    "auth_route",
+    "user_route",
+    "debug_route",
+    "api_route",
+    "rol_route",
+    "permission_route",
+    "institution_route",
+    "assing_route",
+    "config_scheme",
+    "jwt_scheme",
+    "user_scheme",
+    "api_scheme",
+    "redis",
+    "sql",
+    "crud_institution",
+    "crud_api",
+    "mixins",
+    "user_api_model",
+]

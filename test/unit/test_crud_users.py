@@ -114,6 +114,7 @@ def test_deactivate_user(db, user_data):
     crud_users.deactivate_users(db, user.id)
 
     updated_user = (
-        db.query(user_api_model.User).filter(user_api_model.User.id == user.id).first()
+        db.query(user_api_model.User).filter(
+            user_api_model.User.id == user.id).first()
     )
     assert updated_user.is_banned is True

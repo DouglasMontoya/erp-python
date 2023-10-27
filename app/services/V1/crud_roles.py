@@ -11,11 +11,13 @@ from sqlalchemy.exc import IntegrityError
 
 def create_rol(db: Session, api_id: int, data: rol_scheme.Rol) -> Rol:
     try:
-        db_rol = Rol(api_id=api_id, name=data["name"], description=data["description"])
+        db_rol = Rol(
+            api_id=api_id, name=data["name"], description=data["description"])
         db.add(db_rol)
         db.commit()
 
-        db_api_rol = Association_Api_Rol(api_id=db_rol.api_id, rol_id=db_rol.id)
+        db_api_rol = Association_Api_Rol(
+            api_id=db_rol.api_id, rol_id=db_rol.id)
         db.add(db_api_rol)
         db.commit()
 

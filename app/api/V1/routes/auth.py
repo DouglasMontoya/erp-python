@@ -86,10 +86,12 @@ async def login_user(
     db.add(log)
     db.commit()
 
-    payload_content: dict = {"sub": str(user.id), "iss": "IMS", "typ": "Internal"}
+    payload_content: dict = {"sub": str(
+        user.id), "iss": "IMS", "typ": "Internal"}
     token = create_token(payload_content, settings.ACCESS_TOKEN_EXPIRES)
 
-    redis.set(f"jwt_{token}", f"{token}", ex=settings.TIME_EXPIRATION_TOKEN_JWT * 60)
+    redis.set(f"jwt_{token}", f"{token}",
+              ex=settings.TIME_EXPIRATION_TOKEN_JWT * 60)
 
     return {"access_token": token, "token_type": "bearer"}
 
@@ -204,11 +206,13 @@ async def reniew(
             headers={"WWW-Authenticate": "Bearer"},
         )
     # Creamoe el token
-    payload_content: dict = {"sub": str(user.id), "iss": "IMS", "typ": "Internal"}
+    payload_content: dict = {"sub": str(
+        user.id), "iss": "IMS", "typ": "Internal"}
     token = create_token(payload_content, settings.ACCESS_TOKEN_EXPIRES)
 
     # Guaramos el token en redis
-    redis.set(f"jwt_{token}", f"{token}", ex=settings.TIME_EXPIRATION_TOKEN_JWT * 60)
+    redis.set(f"jwt_{token}", f"{token}",
+              ex=settings.TIME_EXPIRATION_TOKEN_JWT * 60)
     return {"access_token": token, "token_type": "bearer"}
 
 

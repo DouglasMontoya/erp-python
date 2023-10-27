@@ -20,7 +20,8 @@ class User(Timestamp, Base):
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    rol_system: Mapped[Enum] = mapped_column(Enum(UserRole), default=UserRole.GUEST)
+    rol_system: Mapped[Enum] = mapped_column(
+        Enum(UserRole), default=UserRole.GUEST)
 
     firt_name: Mapped[str] = mapped_column(String(50))
     last_name: Mapped[str] = mapped_column(String(50))
@@ -28,7 +29,8 @@ class User(Timestamp, Base):
     email: Mapped[str] = mapped_column(String(50), unique=True)
 
     password: Mapped[str]
-    token_email_change_password: Mapped[str] = mapped_column(String(50), nullable=True)
+    token_email_change_password: Mapped[str] = mapped_column(
+        String(50), nullable=True)
 
     is_banned: Mapped[bool] = mapped_column(Boolean, default=False)
     is_locked: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -76,13 +78,15 @@ class Institution(Timestamp, Base):
 class Assosiation_institutions_user(Timestamp, Base):
     __tablename__ = "association_institutions_user_table"
 
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("user.id"), primary_key=True)
     institution_id: Mapped[int] = mapped_column(
         ForeignKey("institution.id"), primary_key=True
     )
 
     user: Mapped[List["User"]] = relationship(back_populates="institutions")
-    institution: Mapped[List["Institution"]] = relationship(back_populates="users")
+    institution: Mapped[List["Institution"]
+                        ] = relationship(back_populates="users")
 
 
 class Log_login(Timestamp, Base):
@@ -109,7 +113,8 @@ class Api(Timestamp, Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=False)
 
     permission: Mapped[List["Permission"]] = relationship()
-    rols: Mapped[List["Association_Api_Rol"]] = relationship(back_populates="rol")
+    rols: Mapped[List["Association_Api_Rol"]
+                 ] = relationship(back_populates="rol")
 
 
 class Rol(Timestamp, Base):
@@ -122,7 +127,8 @@ class Rol(Timestamp, Base):
     name: Mapped[str] = mapped_column(String, unique=True)
     description: Mapped[str]
 
-    apis: Mapped[List["Association_Api_Rol"]] = relationship(back_populates="api")
+    apis: Mapped[List["Association_Api_Rol"]
+                 ] = relationship(back_populates="api")
     permissions: Mapped[List["Association_Rol_Permission"]] = relationship(
         back_populates="rol"
     )
@@ -149,13 +155,15 @@ class Association_Rol_Permission(Timestamp, Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    rol_id: Mapped[int] = mapped_column(ForeignKey("rol.id", ondelete="CASCADE"))
+    rol_id: Mapped[int] = mapped_column(
+        ForeignKey("rol.id", ondelete="CASCADE"))
     permission_id: Mapped[int] = mapped_column(
         ForeignKey("permission.id", ondelete="CASCADE")
     )
 
     rol: Mapped[List["Rol"]] = relationship(back_populates="permissions")
-    permission: Mapped[List["Permission"]] = relationship(back_populates="rols")
+    permission: Mapped[List["Permission"]
+                       ] = relationship(back_populates="rols")
 
 
 class Association_Api_Rol(Timestamp, Base):
@@ -164,8 +172,10 @@ class Association_Api_Rol(Timestamp, Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    api_id: Mapped[int] = mapped_column(ForeignKey("api.id", ondelete="CASCADE"))
-    rol_id: Mapped[int] = mapped_column(ForeignKey("rol.id", ondelete="CASCADE"))
+    api_id: Mapped[int] = mapped_column(
+        ForeignKey("api.id", ondelete="CASCADE"))
+    rol_id: Mapped[int] = mapped_column(
+        ForeignKey("rol.id", ondelete="CASCADE"))
 
     api: Mapped[List["Rol"]] = relationship(back_populates="apis")
     rol: Mapped[List["Api"]] = relationship(back_populates="rols")
@@ -179,7 +189,8 @@ class Association_User_Api_Rol(Timestamp, Base):
     __tablename__ = "association_user_api_rol_table"
     __table_args__ = {"extend_existing": True}
 
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("user.id"), primary_key=True)
     api_rol_id: Mapped[int] = mapped_column(
         ForeignKey("association_api_rol_table.id"), primary_key=True
     )

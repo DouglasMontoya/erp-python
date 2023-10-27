@@ -35,7 +35,8 @@ def get_user(db: Session, user_id_or_name: Union[int, str]) -> Optional[User]:
         return (
             db.query(User)
             .filter(
-                (User.username == user_id_or_name) | (User.email == user_id_or_name)
+                (User.username == user_id_or_name) | (
+                    User.email == user_id_or_name)
             )
             .first()
         )
@@ -61,13 +62,15 @@ def edit_users(db: Session, data: user_scheme.UserBase, user_id: int):
     db.add(user)
     db.commit()
 
-    institution = db.query(Institution).filter_by(name=data["institution"]).first()
+    institution = db.query(Institution).filter_by(
+        name=data["institution"]).first()
     if not institution:
         raise exception_institution
 
     print("➡ user.id :", user.id)
     print("➡ institution.id :", institution.id)
-    ais = Assosiation_institutions_user(user_id=user.id, institution_id=institution.id)
+    ais = Assosiation_institutions_user(
+        user_id=user.id, institution_id=institution.id)
     db.add(ais)
     db.commit()
 
