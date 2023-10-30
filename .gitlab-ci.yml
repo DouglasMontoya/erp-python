@@ -1,49 +1,22 @@
-stages:
-  - lint
-  - test
-  - build
-  - .post
+image:
+  name: docker/compose:1.24.1
+  entrypoint: ["sh", "-c"]
 
-flake8:
-  stage: lint
-  image: python:3.10-alpine
-  script:
-    - pip install flake8
-    - flake8 .
+services:
+  - docker:dind
 
-formatting:
-  stage: lint
-  image: python:3.10-alpine
-  script:
-    - pip install black
-    - black --check .
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
 
-pytest:
-  stage: test
-  image: python:3.10-alpine
+Lint:
   script:
-    - pip install -r requirements.txt
-    - pytest
+    - docker run --rm -v ${PWD}:/data python:3.10.13-alpine3.17 sh -c "pip install flake8; flake8 ."
 
-build:
-  stage: build
-  services:
-    - docker:20.10.16-dind
+Test:
+  before_script:
+    - apk add --update curl
+    - docker version
+    - docker-compose version
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/erpsistemas/erp-python/erp-python:latest .
-    - docker push $CI_REGISTRY/erpsistemas/erp-python/erp-python:latest
-  only:
-    - dev
-
-deploy:
-  stage: .post
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: [""]
-  script:
-    - kubectl config use-context erpsistemas/erp-python:erpbackend-agent
-    - kubectl apply -f erp-deploy-backend.yaml
-    - kubectl delete pods --selector=app=erpsystem-python-app
-  only:
-    - dev
+    - docker-compose run backend pytest
