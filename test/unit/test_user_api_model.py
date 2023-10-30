@@ -57,8 +57,7 @@ def test_institution_model():
 
 
 def test_log_login_model():
-    log_login = user_api_model.Log_login(
-        id=1, id_user=1, ip_addres="192.168.0.1")
+    log_login = user_api_model.Log_login(id=1, id_user=1, ip_addres="192.168.0.1")
 
     assert isinstance(log_login.id, int)
     assert isinstance(log_login.id_user, int)
@@ -70,10 +69,8 @@ def test_log_login_model():
 
 def test_rol_model():
     rol = user_api_model.Rol(
-        id=1,
-        api_id=1,
-        name="Example Rol",
-        description="This is an example role")
+        id=1, api_id=1, name="Example Rol", description="This is an example role"
+    )
 
     assert isinstance(rol.id, int)
     assert isinstance(rol.api_id, int)

@@ -70,8 +70,7 @@ def test_encrypt_password():
 def test_verify_password():
     password1: str = "password123"
     passworld_encrypt: str = security.pwd_context.hash(password1)
-    passworld_decode: str = security.verify_password(
-        password1, passworld_encrypt)
+    passworld_decode: str = security.verify_password(password1, passworld_encrypt)
 
     assert password1 != passworld_encrypt
     assert passworld_decode
@@ -112,8 +111,7 @@ def test_create_token():
 
 def test_decode_token():
     data = {"user_id": 1, "username": "example"}
-    token_jwt = security.jwt.encode(
-        data, settings.SECRET_KEY, settings.ALGORITHM)
+    token_jwt = security.jwt.encode(data, settings.SECRET_KEY, settings.ALGORITHM)
 
     decoded = security.decode_token(token_jwt)
 
@@ -122,10 +120,8 @@ def test_decode_token():
 
 
 def test_verify_token_redis():
-    data = {"user_id": 1, "username": "example",
-            "iat": 1691697012, "exp": 1691698212}
-    data1 = {"user_id": 2, "username": "example",
-             "iat": 1691697012, "exp": 1691698212}
+    data = {"user_id": 1, "username": "example", "iat": 1691697012, "exp": 1691698212}
+    data1 = {"user_id": 2, "username": "example", "iat": 1691697012, "exp": 1691698212}
 
     r = redis.Redis(
         host=security.settings.HOST_REDIS,

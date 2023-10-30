@@ -32,10 +32,10 @@ services:
       dockerfile: Dockerfile
     command: celery --app app.tasks worker --loglevel=DEBUG -Q main-queue -c 1
 
-  flower:  
+  flower:
     image: mher/flower
     command: celery flower --broker=redis://redis:6379/0 --port=5555
-    ports:  
+    ports:
         - 5555:5555
     depends_on:
       - "redis"
@@ -54,17 +54,6 @@ services:
       DATABASE_URL: 'postgresql://erp-db-user:12345@postgres:5432/erp-db-user'
     depends_on:
       - "postgres"
-
-  frontend:
-    build:
-      context: frontend
-      dockerfile: Dockerfile
-    stdin_open: true
-    volumes:
-      - './frontend:/app:cached'
-      - './frontend/node_modules:/app/node_modules:cached'
-    environment:
-      - NODE_ENV=development
 
 
 volumes:

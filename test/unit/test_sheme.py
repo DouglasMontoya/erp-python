@@ -38,8 +38,7 @@ def test_env_settings_types():
 
 
 def test_token_payload():
-    payload = jwt_scheme.TokenPayload(
-        sub="user123", iss="myapp", typ="external")
+    payload = jwt_scheme.TokenPayload(sub="user123", iss="myapp", typ="external")
 
     assert payload.sub == "user123"
     assert payload.iss == "myapp"
