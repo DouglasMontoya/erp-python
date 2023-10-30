@@ -1,0 +1,10 @@
+{
+  "name": "Autoges",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "extensions": [
+  ]
+}
