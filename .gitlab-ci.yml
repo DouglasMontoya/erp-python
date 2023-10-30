@@ -2,6 +2,7 @@ stages:
   - lint
   - test
   - build
+  - .post
 
 flake8:
   stage: lint
@@ -36,7 +37,7 @@ build:
     - dev
 
 deploy:
-  stage: deploy
+  stage: .post
   image:
     name: bitnami/kubectl:latest
     entrypoint: [""]
