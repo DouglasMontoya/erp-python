@@ -30,7 +30,9 @@ def test_db():
     trans = connection.begin()
 
     # Run a parent transaction that can roll back all changes
-    test_session_maker = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    test_session_maker = sessionmaker(autocommit=False,
+                                      autoflush=False,
+                                      bind=engine)
     test_session = test_session_maker()
     test_session.begin_nested()
 
