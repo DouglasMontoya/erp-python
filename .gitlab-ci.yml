@@ -1,0 +1,22 @@
+image:
+  name: docker/compose:1.24.1
+  entrypoint: ["sh", "-c"]
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+
+Lint:
+  script:
+    - docker run --rm -v ${PWD}:/data python:3.10.13-alpine3.17 sh -c "pip install flake8; flake8 ./data/"
+
+Test:
+  before_script:
+    - apk add --update curl
+    - docker version
+    - docker-compose version
+  script:
+    - docker-compose run backend pytest
