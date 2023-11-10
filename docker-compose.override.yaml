@@ -1,4 +1,0 @@
-services:
-  backend:
-    environment:
-      DATABASE_URL: 'postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_NAME}'

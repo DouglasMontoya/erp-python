@@ -1,6 +1,0 @@
-.pytest_cache/
-**/__pycache__/
-.env
-pyrightconfig.json
-nvim.log
-**/dist/
