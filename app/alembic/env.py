@@ -7,6 +7,8 @@ from sqlalchemy import pool
 
 from app.db.models import Base
 from app.db.session import validate_database
+import app.core.config as app_config
+
 validate_database()
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -29,7 +31,7 @@ target_metadata = Base.metadata
 
 
 def get_url():
-    return os.getenv("DATABASE_URL")
+    return app_config.SQLALCHEMY_DATABASE_URI
 
 
 def run_migrations_offline():
