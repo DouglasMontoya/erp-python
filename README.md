@@ -67,3 +67,5 @@
 To start the project, run the following command:
 ```bash
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8080
+```
+**Now the project is running http:localhost:8080**
