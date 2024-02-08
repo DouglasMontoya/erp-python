@@ -1,159 +1,69 @@
-# autoges-erp
+# Instructions to Install the Project
 
-## Features
+## Requirements
+- Python 3.8 or higher
+- Python `venv` package
+- PostgreSQL
 
-- **FastAPI** with Python 3.8
-- **React 16** with Typescript, Redux, and react-router
-- Postgres
-- SqlAlchemy with Alembic for migrations
-- Pytest for backend tests
-- Jest for frontend tests
-- Perttier/Eslint (with Airbnb style guide)
-- Docker compose for easier development
-- Nginx as a reverse proxy to allow backend and frontend on the same port
+## Phase 1: Installing the Project
 
-## Development
+1. Clone the repository:
+    ```bash
+    git clone <repository_url>
+    cd <repository_name>
+    ```
 
-The only dependencies for this project should be docker and docker-compose.
+2. Create a virtual environment using `venv`:
+    ```bash
+    python3 -m venv venv
+    ```
 
-### Quick Start
+3. Activate the virtual environment:
+    - For Linux:
+        ```bash
+        source venv/bin/activate
+        ```
+    - For Windows:
+        ```bash
+        venv\Scripts\activate
+        ```
 
-Starting the project with hot-reloading enabled
-(the first time it will take a while):
+4. Install Poetry:
+    ```bash
+    pip install poetry
+    ```
 
+5. Install project dependencies using Poetry:
+    ```bash
+    poetry install
+    ```
+
+## Phase 2: Installing the Database
+
+1. Navigate to the `database` directory:
+    ```bash
+    cd database
+    ```
+
+2. Ensure you have already created a PostgreSQL database.
+
+3. Import the SQL file using `psql`:
+    ```bash
+    psql -U <username> -d <dbname> < filename.sql
+    ```
+    Replace `<username>` with your PostgreSQL username, `<dbname>` with the name of your database, and `filename.sql` with the SQL file to import.
+
+4. Copy and paste the `.env.template` file located in the root of the project and rename it to `.env`.
+
+5. Edit the following environment variables in the `.env` file with your PostgreSQL configuration:
+    - `POSTGRES_NAME`
+    - `POSTGRES_HOST`
+    - `POSTGRES_USER`
+    - `POSTGRES_PASSWORD`
+    - `POSTGRES_PORT`
+
+## Phase 3: Starting the Project
+
+To start the project, run the following command:
 ```bash
-docker-compose up -d
-```
-
-To run the alembic migrations (for the users table):
-
-```bash
-docker-compose run --rm backend alembic upgrade head
-```
-
-And navigate to http://localhost:8000
-
-_Note: If you see an Nginx error at first with a `502: Bad Gateway` page, you may have to wait for webpack to build the development server (the nginx container builds much more quickly)._
-
-Auto-generated docs will be at
-http://localhost:8000/api/docs
-
-### Rebuilding containers:
-
-```
-docker-compose build
-```
-
-### Restarting containers:
-
-```
-docker-compose restart
-```
-
-### Bringing containers down:
-
-```
-docker-compose down
-```
-
-### Frontend Development
-
-Alternatively to running inside docker, it can sometimes be easier
-to use npm directly for quicker reloading. To run using npm:
-
-```
-cd frontend
-npm install
-npm start
-```
-
-This should redirect you to http://localhost:3000
-
-### Frontend Tests
-
-```
-cd frontend
-npm install
-npm test
-```
-
-## Migrations
-
-Migrations are run using alembic. To run all migrations:
-
-```
-docker-compose run --rm backend alembic upgrade head
-```
-
-To create a new migration:
-
-```
-alembic revision -m "create users table"
-```
-
-And fill in `upgrade` and `downgrade` methods. For more information see
-[Alembic's official documentation](https://alembic.sqlalchemy.org/en/latest/tutorial.html#create-a-migration-script).
-
-## Testing
-
-There is a helper script for both frontend and backend tests:
-
-```
-./scripts/test.sh
-```
-
-### Backend Tests
-
-```
-docker-compose run backend pytest
-```
-
-any arguments to pytest can also be passed after this command
-
-### Frontend Tests
-
-```
-docker-compose run frontend test
-```
-
-This is the same as running npm test from within the frontend directory
-
-## Logging
-
-```
-docker-compose logs
-```
-
-Or for a specific service:
-
-```
-docker-compose logs -f name_of_service # frontend|backend|db
-```
-
-## Project Layout
-
-```
-backend
-└── app
-    ├── alembic
-    │   └── versions # where migrations are located
-    ├── api
-    │   └── api_v1
-    │       └── endpoints
-    ├── core    # config
-    ├── db      # db models
-    ├── tests   # pytest
-    └── main.py # entrypoint to backend
-
-frontend
-└── public
-└── src
-    ├── components
-    │   └── Home.tsx
-    ├── config
-    │   └── index.tsx   # constants
-    ├── __tests__
-    │   └── test_home.tsx
-    ├── index.tsx   # entrypoint
-    └── App.tsx     # handles routing
-```
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8080
