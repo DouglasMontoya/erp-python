@@ -4,15 +4,29 @@ import uvicorn
 
 from app.api.api_v1.users import router as users_router
 from app.api.api_v1.auth import router as auth_router
+from app.api.api_v1.accounts import router as accounts_router
 from app.core import config
 from app.db.session import SessionLocal
 from app.core.auth import get_current_active_user
+from fastapi.middleware.cors import CORSMiddleware
 
 # from app import tasks
 
 
 app = FastAPI(title=config.PROJECT_NAME,
               docs_url="/api/docs", openapi_url="/api")
+
+origins = [
+  "http://localhost:3000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.middleware("http")
@@ -33,6 +47,11 @@ app.include_router(
     prefix="/api/v1",
     tags=["users"],
     dependencies=[Depends(get_current_active_user)],
+)
+app.include_router(
+    accounts_router,
+    prefix="/api/v1",
+    tags=["accounts"],
 )
 app.include_router(auth_router, prefix="/api", tags=["auth"])
 
