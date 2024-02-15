@@ -22,7 +22,7 @@ class User(Base):
 class Customer(Base):
     __tablename__ = "customer"
 
-    id = Column(String, primary_key=True, index=True, default=str(uuid4()))
+    id = Column(String, primary_key=True, index=True, default=lambda: str(uuid4()))
     email = Column(String, unique=True, index=True)
     first_name = Column(String, index=True)
     last_name = Column(String, index=True)
@@ -75,14 +75,13 @@ class Address(Base):
     tags = Column(String)
 
     customer = relationship("Customer", back_populates="addresses")
-    # country = relationship("Country")
 
 Customer.addresses = relationship("Address", order_by=Address.id, back_populates="customer")
 
 class CustomerPayment(Base):
     __tablename__ = "customer_payment"
 
-    id = Column(String, primary_key=True, index=True, default=str(uuid4()))
+    id = Column(String, primary_key=True, index=True, default=lambda: str(uuid4()))
     customer_id = Column(String)
     payment_method = Column(String)
     payday = Column(String)
@@ -108,3 +107,16 @@ class Contacts(Base):
     note = Column(String)
     customer_id = Column(String)
     job = Column(String)
+
+class Provider(Base):
+    __tablename__ = "provider"
+
+    id = Column(String, primary_key=True, index=True, default=lambda: str(uuid4()))
+    provider_payment_id = Column(String)
+    customer_id = Column(String)
+    account_iva = Column(String)
+    account_irpf = Column(String)
+    account_provider = Column(String)
+    account_creditor = Column(String)
+    operation_field_id = Column(BigInteger)
+    operation_type_id = Column(BigInteger)
