@@ -179,8 +179,6 @@ def get_customers(db: Session):
 
     cu = models.Customer
     ad = models.Address
-
-    
     
     customerByType = select(
         cu.id.label('id_customer'),
@@ -202,7 +200,8 @@ def get_customers(db: Session):
     )
        
     return db.execute(customerByType).fetchall()
- 
+
+
 def add_addresses(db: Session, customer_id, data):
 
     # ADD ADDRESSES
