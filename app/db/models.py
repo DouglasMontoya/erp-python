@@ -73,6 +73,7 @@ class Address(Base):
     company_activity = Column(String)
     cnae = Column(String)
     tags = Column(String)
+    email = Column(String)
 
     customer = relationship("Customer", back_populates="addresses")
 

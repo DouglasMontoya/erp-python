@@ -94,7 +94,7 @@ def account_create(db: Session, data):
             customer_id = customer.id
 
             # ADD ADDRESS
-            add_addresses(db, customer_id, data)
+            add_addresses(db, customer_id, data, customer_type)
 
             # ADD PAYMENT METHOD
             add_method_payment(db, customer_id, data)
@@ -135,7 +135,7 @@ def account_create(db: Session, data):
             db.commit()
 
             # ADD ADDRESS
-            add_addresses(db, customer_id, data)
+            add_addresses(db, customer_id, data, customer_type)
 
             # ADD PAYMENT METHOD
             add_method_payment(db, customer_id, data)
@@ -147,55 +147,65 @@ def account_create(db: Session, data):
             
             # CREATE CUSTOMER
             object_customer = {
-                "fisrt_name": data['step1']['firstName'],
-                "last_name": data['spet1']['lastName'],
-                "email": data['spet1']['email'],
+                "first_name": data['step1']['firstName'],
+                "last_name": data['step1']['lastName'],
+                "email": data['step1']['email'],
+                "legal_representative": data['step1']["represent"],
+                "is_customer": customer_type
             }
 
             # Create a new Customer instance
-            customer = models.Customer(**object_customer)
+            new_customer = models.Customer(**object_customer)
 
             # Add the new customer to the session and commit
-            db.add(customer)
+            db.add(new_customer)
             db.commit()
 
             # Get customer id
             customer_id = new_customer.id
 
             # ADD ADDRESS
+            add_addresses(db, customer_id, data, customer_type)
 
-            add_addresses(db, customer_id, data)
+            # ADD PAYMENT METHOD
+            add_method_payment(db, customer_id, data)
 
+            # ADD CONTACTS
+            add_contacts(db, customer_id, data)
         else:
             raise HTTPException(status_code=400, detail="Invalid client type")
     else:
         raise HTTPException(status_code=400, detail="Invalid data")
     
-    return {"message": "Cuena creada exitosamente", "data": "ok"}
+    return {"message": "Cuenta creada exitosamente", "data": "ok"}
 
 
-def add_addresses(db: Session, customer_id, data):
+def add_addresses(db: Session, customer_id, data, customer_type):
 
     # ADD ADDRESSES
 
     # Main address
     address_1 = {
         "customer_id": customer_id,
-        "company": data['step1']['fiscalName'],
-        "nif": data['step1']['nif'],
         "address_1": data['step1']['address'],
         "postal_code": data['step1']['postalCode'],
         "province": data['step1']['province'],
         "city": data['step1']['city'],
-        "first_name": data['step1']['peopleContact'],
         "phone": data['step1']['phone'],
-        "company_activity": data['step1']['companyActivity'],
         "opening_days": data['step1']['daysOpened'],
         "horary": data['step1']['hours'],
         "tags": data['step1']['tags'],
     }
+
+    if customer_type == 'business-client' or customer_type == 'provider':
+        address_1['first_name'] = data['step1']['peopleContact']
+        address_1['company'] = data['step1']['fiscalName']
+        address_1['company_activity'] = data['step1']['companyActivity']
+        address_1['nif'] = data['step1']['nif']
+    elif customer_type == 'particular-client':
+        address_1['nif'] = data['step1']['dni']
     
-    if data['step1']['clientType'] == 'business-client':
+    if customer_type == 'business-client':
         address_1['cnae'] = data['step1']['cnae']
 
     # Optional address
@@ -207,18 +217,23 @@ def add_addresses(db: Session, customer_id, data):
     for item in data['step2']:
         new_address_data = {
             "customer_id": customer_id,
-            "company": item['fiscalName'],
             "nif": item['nif'],
             "address_2": item['address'],
             "postal_code": item['postalCode'],
             "province": item['province'],
             "city": item['city'],
-            "first_name": item['peopleContact'],
             "phone": item['phone'],
-            "company_activity": data['step1']['companyActivity'],
             "opening_days": item['daysOpened'],
             "horary": item['hours'],
+            "email": item['email'],
         }
+        if data['step1']['clientType'] == 'business-client' or data['step1']['clientType'] == 'provider':
+            new_address_data['first_name'] = data['step1']['peopleContact']
+            new_address_data['company'] = data['step1']['fiscalName']
+            new_address_data['company_activity'] = data['step1']['companyActivity']
+            new_address_data['nif'] = data['step1']['nif']
+        elif data['step1']['clientType'] == 'particular-client':
+            new_address_data['nif'] = data['step1']['dni']
         if data['step1']['clientType'] == 'business-client':
             new_address_data['cnae'] = data['step1']['cnae']
 
