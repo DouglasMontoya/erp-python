@@ -47,7 +47,7 @@
 
 2. Ensure you have already created a PostgreSQL database.
 
-3. \:
+3. Import the SQL file using `psql`:
     ```bash
     psql -U <username> -d <dbname> < filename.sql
     ```
