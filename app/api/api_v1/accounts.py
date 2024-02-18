@@ -20,10 +20,10 @@ def customer_list(customer_type: str, db=Depends(get_db)):
         
         lista_dict = [dict(row._mapping) for row in results]
         
-        data = [{
+        data = {
             "status": "ok",
             "data": lista_dict
-        }]
+        }
         
         return data
     
