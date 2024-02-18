@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy import desc, select
 import typing as t
 
 from . import models, schemas
@@ -174,6 +175,34 @@ def account_create(db: Session, data):
     return {"message": "Cuena creada exitosamente", "data": "ok"}
 
 
+def get_customers(db: Session):
+
+    cu = models.Customer
+    ad = models.Address
+
+    
+    
+    customerByType = select(
+        cu.id.label('id_customer'),
+        ad.company.label('fiscal_name'),
+        cu.tradename.label('commercial_name'),
+        ad.nif,
+        ad.address_1,
+        ad.city,
+        ad.province,
+        ad.phone,
+        cu.email,
+        ad.tags
+    ).join(ad, cu.id == ad.customer_id
+    ).filter(
+        (cu.is_customer == 'business-client') &
+        (ad.address_1.isnot(None))
+    ).order_by(
+        desc(cu.updated_at)
+    )
+       
+    return db.execute(customerByType).fetchall()
+ 
 def add_addresses(db: Session, customer_id, data):
 
     # ADD ADDRESSES
