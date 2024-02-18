@@ -28,13 +28,3 @@ def customer_list(customer_type: str, db=Depends(get_db)):
         return data
     
     return {"message": "Opcion no valida"}
-
-@r.get("/accounts/get-customers")
-def customer_list(db=Depends(get_db)):
-    results = get_customers(db)
-    lista_dict = [dict(row._mapping) for row in results ]
-    data = [{
-            "status": "ok",
-            "data": lista_dict
-    }]
-    return data
