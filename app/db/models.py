@@ -121,3 +121,16 @@ class Provider(Base):
     account_creditor = Column(String)
     operation_field_id = Column(BigInteger)
     operation_type_id = Column(BigInteger)
+
+class ProviderPayment(Base):
+    __tablename__ = 'provider_payment'
+
+    id = Column(String, primary_key=True)
+    provider_id = Column(String)
+    payment_method = Column(String)
+    payday = Column(String)
+    bank_country = Column(String)
+    currency_code = Column(String)
+    iban = Column(String)
+    swift = Column(String)
+    payday_adjustment = Column(String)
