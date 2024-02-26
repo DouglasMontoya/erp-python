@@ -117,7 +117,6 @@ def account_create(db: Session, data):
             db.add(new_customer)
             db.commit()
 
-            # Get customer id
             customer_id = new_customer.id
 
             # CREATE PROVIDER
@@ -132,11 +131,13 @@ def account_create(db: Session, data):
             db.add(new_provider)
             db.commit()
 
+            provider_id = new_provider.id
+
             # ADD ADDRESS
             add_addresses(db, customer_id, data, customer_type)
 
             # ADD PAYMENT METHOD
-            add_method_payment(db, customer_id, data)
+            add_method_payment(db, customer_id, data, provider_id)
 
             # ADD CONTACTS
             add_contacts(db, customer_id, data)
@@ -239,11 +240,10 @@ def add_addresses(db: Session, customer_id, data, customer_type):
         db.commit()
 
 
-def add_method_payment(db: Session, customer_id, data):
+def add_method_payment(db: Session, customer_id, data, provider_id= None):
     payment_method_object = {}
     if data['step3']['payMethod'] == 'bank':
         payment_method_object = {
-            "customer_id": customer_id,
             "iban": data['step3']['iban'],
             "swift": data['step3']['bicSwift'],
             "currency_code": data['step3']['currency'],
@@ -255,7 +255,12 @@ def add_method_payment(db: Session, customer_id, data):
         # Add when the method payment is transfer
         pass
 
-    payment_method = models.CustomerPayment(**payment_method_object)
+    if provider_id != None: # Save the method payment in prodiver_payment if is provider
+        payment_method_object["provider_id"] = provider_id
+        payment_method = models.ProviderPayment(**payment_method_object)
+    else: # Save the method payment in customer_payment if not is provider
+        payment_method_object["customer_id"] = customer_id
+        payment_method = models.CustomerPayment(**payment_method_object)
     db.add(payment_method)
     db.commit()
 
