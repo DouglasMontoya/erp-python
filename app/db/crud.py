@@ -227,14 +227,14 @@ def add_addresses(db: Session, customer_id, data, customer_type):
             "horary": item['hours'],
             "email": item['email'],
         }
-        if data['step1']['clientType'] == 'business-client' or data['step1']['clientType'] == 'provider':
+        if customer_type == 'business-client' or customer_type == 'provider':
             new_address_data['first_name'] = item['peopleContact']
             new_address_data['company'] = item['fiscalName']
             new_address_data['company_activity'] = item['companyActivity']
             new_address_data['nif'] = item['nif']
-            if data['step1']['clientType'] == 'business-client':
+            if customer_type == 'business-client':
                 new_address_data['cnae'] = item['cnae']
-        elif data['step1']['clientType'] == 'particular-client':
+        elif customer_type == 'particular-client':
             new_address_data['first_name'] = item['firstName']
             new_address_data['last_name'] = item['lastName']
             new_address_data['nif'] = item['dni']
