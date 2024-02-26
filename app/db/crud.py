@@ -74,36 +74,34 @@ def account_create(db: Session, data):
         if customer_type == 'business-client':
           
             # CREATE CUSTOMER
-            tradename = data['step1']['commercialName']
-            email_db = data['step1']["email"]
-            legal_repres = data['step1']["represent"]
 
-            # Create a new Customer instance
-            customer = models.Customer(
-                email=email_db,
-                tradename=tradename,
-                is_customer=customer_type,
-                legal_representative=legal_repres
-            )
+            object_customer = {
+                "email": data['step1']['email'],
+                "tradename": data['step1']['commercialName'],
+                "is_customer": customer_type,
+                "legal_representative": data['step1']['represent'],
+                "re": data['step1']['equivSurcharge']
+            }
 
-            # Add the new customer to the session and commit
-            db.add(customer)
+            new_customer = models.Customer(**object_customer)
+            db.add(new_customer)
             db.commit()
 
-            # Get customer id
-            customer_id = customer.id
+            customer_id = new_customer.id
 
             # ADD ADDRESS
+
             add_addresses(db, customer_id, data, customer_type)
 
             # ADD PAYMENT METHOD
+
             add_method_payment(db, customer_id, data)
 
             # ADD CONTACTS
+
             add_contacts(db, customer_id, data)
 
             return {"message": "Usuario creado exitosamente", "data": "ok"}
-            # return {"message": "Usuario creado exitosamente", "data": customer}
         elif customer_type == 'provider':
 
             # CREATE CUSTOMER
@@ -275,6 +273,7 @@ def add_contacts(db: Session, customer_id, data):
             "job": item['job'],
             "dni": item['dni'],
             "name": item['nameAndLastName'],
+            "province": item['province'],
         }
         contacts = models.Contacts(**object_contact)
         db.add(contacts)
