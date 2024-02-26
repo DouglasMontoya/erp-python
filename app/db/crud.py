@@ -134,17 +134,20 @@ def account_create(db: Session, data):
             provider_id = new_provider.id
 
             # ADD ADDRESS
+
             add_addresses(db, customer_id, data, customer_type)
 
             # ADD PAYMENT METHOD
+
             add_method_payment(db, customer_id, data, provider_id)
 
             # ADD CONTACTS
-            add_contacts(db, customer_id, data)
 
+            add_contacts(db, customer_id, data)
         elif customer_type == 'particular-client':
             
             # CREATE CUSTOMER
+
             object_customer = {
                 "first_name": data['step1']['firstName'],
                 "last_name": data['step1']['lastName'],
@@ -153,23 +156,23 @@ def account_create(db: Session, data):
                 "is_customer": customer_type
             }
 
-            # Create a new Customer instance
             new_customer = models.Customer(**object_customer)
 
-            # Add the new customer to the session and commit
             db.add(new_customer)
             db.commit()
 
-            # Get customer id
             customer_id = new_customer.id
 
             # ADD ADDRESS
+
             add_addresses(db, customer_id, data, customer_type)
 
             # ADD PAYMENT METHOD
+
             add_method_payment(db, customer_id, data)
 
             # ADD CONTACTS
+
             add_contacts(db, customer_id, data)
         else:
             raise HTTPException(status_code=400, detail="Invalid client type")
@@ -205,17 +208,16 @@ def add_addresses(db: Session, customer_id, data, customer_type):
     
     if customer_type == 'business-client':
         address_1['cnae'] = data['step1']['cnae']
-
-    # Optional address
+        
     new_address = models.Address(**address_1)
 
     db.add(new_address)
     db.commit()
 
+    # Optional address
     for item in data['step2']:
         new_address_data = {
             "customer_id": customer_id,
-            "nif": item['nif'],
             "address_2": item['address'],
             "postal_code": item['postalCode'],
             "province": item['province'],
@@ -226,14 +228,16 @@ def add_addresses(db: Session, customer_id, data, customer_type):
             "email": item['email'],
         }
         if data['step1']['clientType'] == 'business-client' or data['step1']['clientType'] == 'provider':
-            new_address_data['first_name'] = data['step1']['peopleContact']
-            new_address_data['company'] = data['step1']['fiscalName']
-            new_address_data['company_activity'] = data['step1']['companyActivity']
-            new_address_data['nif'] = data['step1']['nif']
+            new_address_data['first_name'] = item['peopleContact']
+            new_address_data['company'] = item['fiscalName']
+            new_address_data['company_activity'] = item['companyActivity']
+            new_address_data['nif'] = item['nif']
+            if data['step1']['clientType'] == 'business-client':
+                new_address_data['cnae'] = item['cnae']
         elif data['step1']['clientType'] == 'particular-client':
-            new_address_data['nif'] = data['step1']['dni']
-        if data['step1']['clientType'] == 'business-client':
-            new_address_data['cnae'] = data['step1']['cnae']
+            new_address_data['first_name'] = item['firstName']
+            new_address_data['last_name'] = item['lastName']
+            new_address_data['nif'] = item['dni']
 
         new_address = models.Address(**new_address_data)
         db.add(new_address)
