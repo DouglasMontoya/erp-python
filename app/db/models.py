@@ -125,7 +125,7 @@ class Provider(Base):
 class ProviderPayment(Base):
     __tablename__ = 'provider_payment'
 
-    id = Column(String, primary_key=True)
+    id = Column(String, primary_key=True, index=True, default=lambda: str(uuid4()))
     provider_id = Column(String)
     payment_method = Column(String)
     payday = Column(String)
