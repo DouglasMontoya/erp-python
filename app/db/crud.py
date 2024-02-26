@@ -67,7 +67,6 @@ def edit_user(db: Session, user_id: int,
     db.refresh(db_user)
     return db_user
 
-
 def account_create(db: Session, data):
 
     if len(data['step1']['clientType']) == 1:
@@ -180,88 +179,6 @@ def account_create(db: Session, data):
     
     return {"message": "Cuenta creada exitosamente", "data": "ok"}
 
-
-def get_customers(db: Session):
-
-    cu = models.Customer
-    ad = models.Address
-    
-    customerByType = select(
-        cu.id.label('id_customer'),
-        ad.company.label('fiscal_name'),
-        cu.tradename.label('commercial_name'),
-        ad.nif,
-        ad.address_1,
-        ad.city,
-        ad.province,
-        ad.phone,
-        cu.email,
-        ad.tags
-    ).join(ad, cu.id == ad.customer_id
-    ).filter(
-        (cu.is_customer == 'business-client') &
-        (ad.address_1.isnot(None))
-    ).order_by(
-        desc(cu.updated_at)
-    )
-       
-    return db.execute(customerByType).fetchall()
-
-
-def get_customers(db: Session):
-
-    cu = models.Customer
-    ad = models.Address
-    
-    customerByType = select(
-        cu.id.label('id_customer'),
-        ad.company.label('fiscal_name'),
-        cu.tradename.label('commercial_name'),
-        ad.nif,
-        ad.address_1,
-        ad.city,
-        ad.province,
-        ad.phone,
-        cu.email,
-        ad.tags
-    ).join(ad, cu.id == ad.customer_id
-    ).filter(
-        (cu.is_customer == 'business-client') &
-        (ad.address_1.isnot(None))
-    ).order_by(
-        desc(cu.updated_at)
-    )
-       
-    return db.execute(customerByType).fetchall()
-
-
-def get_customers(db: Session):
-
-    cu = models.Customer
-    ad = models.Address
-    
-    customerByType = select(
-        cu.id.label('id_customer'),
-        ad.company.label('fiscal_name'),
-        cu.tradename.label('commercial_name'),
-        ad.nif,
-        ad.address_1,
-        ad.city,
-        ad.province,
-        ad.phone,
-        cu.email,
-        ad.tags
-    ).join(ad, cu.id == ad.customer_id
-    ).filter(
-        (cu.is_customer == 'business-client') &
-        (ad.address_1.isnot(None))
-    ).order_by(
-        desc(cu.updated_at)
-    )
-       
-    return db.execute(customerByType).fetchall()
-
-
 def add_addresses(db: Session, customer_id, data, customer_type):
 
     # ADD ADDRESSES
@@ -362,3 +279,29 @@ def add_contacts(db: Session, customer_id, data):
         contacts = models.Contacts(**object_contact)
         db.add(contacts)
         db.commit()
+
+def get_customers(db: Session):
+
+    cu = models.Customer
+    ad = models.Address
+    
+    customerByType = select(
+        cu.id.label('id_customer'),
+        ad.company.label('fiscal_name'),
+        cu.tradename.label('commercial_name'),
+        ad.nif,
+        ad.address_1,
+        ad.city,
+        ad.province,
+        ad.phone,
+        cu.email,
+        ad.tags
+    ).join(ad, cu.id == ad.customer_id
+    ).filter(
+        (cu.is_customer == 'business-client') &
+        (ad.address_1.isnot(None))
+    ).order_by(
+        desc(cu.updated_at)
+    )
+       
+    return db.execute(customerByType).fetchall()
