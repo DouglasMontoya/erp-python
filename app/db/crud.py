@@ -203,11 +203,10 @@ def add_addresses(db: Session, customer_id, data, customer_type):
         address_1['company'] = data['step1']['fiscalName']
         address_1['company_activity'] = data['step1']['companyActivity']
         address_1['nif'] = data['step1']['nif']
+        if customer_type == 'business-client':
+            address_1['cnae'] = data['step1']['cnae']
     elif customer_type == 'particular-client':
         address_1['nif'] = data['step1']['dni']
-    
-    if customer_type == 'business-client':
-        address_1['cnae'] = data['step1']['cnae']
         
     new_address = models.Address(**address_1)
 
@@ -230,10 +229,7 @@ def add_addresses(db: Session, customer_id, data, customer_type):
         if customer_type == 'business-client' or customer_type == 'provider':
             new_address_data['first_name'] = item['peopleContact']
             new_address_data['company'] = item['fiscalName']
-            new_address_data['company_activity'] = item['companyActivity']
             new_address_data['nif'] = item['nif']
-            if customer_type == 'business-client':
-                new_address_data['cnae'] = item['cnae']
         elif customer_type == 'particular-client':
             new_address_data['first_name'] = item['firstName']
             new_address_data['last_name'] = item['lastName']
