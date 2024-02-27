@@ -225,15 +225,14 @@ def add_addresses(db: Session, customer_id, data, customer_type):
             "opening_days": item['daysOpened'],
             "horary": item['hours'],
             "email": item['email'],
+            "nif": item['nif'],
         }
         if customer_type == 'business-client' or customer_type == 'provider':
             new_address_data['first_name'] = item['peopleContact']
             new_address_data['company'] = item['fiscalName']
-            new_address_data['nif'] = item['nif']
         elif customer_type == 'particular-client':
             new_address_data['first_name'] = item['firstName']
             new_address_data['last_name'] = item['lastName']
-            new_address_data['nif'] = item['dni']
 
         new_address = models.Address(**new_address_data)
         db.add(new_address)
